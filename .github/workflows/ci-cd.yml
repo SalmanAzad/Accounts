@@ -1,0 +1,36 @@
+name: CI/CD Pipeline
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+
+    - name: Set up JDK 21
+      uses: actions/setup-java@v3
+      with:
+        distribution: 'temurin'
+        java-version: '21'
+
+    - name: Grant execute permission for Maven wrapper
+      run: chmod +x ./mvnw
+
+    - name: Build and run tests
+      run: ./mvnw clean verify
+
+    - name: Package application
+      run: ./mvnw package
+
+    # Optional deployment step
+    # - name: Deploy to server or cloud
+    #   run: |
+    #     echo "Add deployment logic here"
